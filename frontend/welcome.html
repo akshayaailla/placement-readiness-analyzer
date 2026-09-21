@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Campus Drive</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 70%);
+}
+
+/* CENTER */
+.container {
+    text-align: center;
+    color: white;
+}
+
+/* NORMAL TEXT */
+h1 {
+    font-size: 38px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* ✨ SHINING TEXT */
+.shine {
+    background: linear-gradient(90deg, #c084fc, #22d3ee, #c084fc);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    animation: shineMove 3s linear infinite;
+}
+
+/* SHINE ANIMATION */
+@keyframes shineMove {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* SUBTEXT */
+p {
+    font-size: 16px;
+    color: #cbd5f5;
+    margin-bottom: 35px;
+}
+
+/* BUTTON */
+button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(to right, #c084fc, #22d3ee);
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px #22d3ee;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Welcome to <span class="shine">Campus Drive</span></h1>
+
+<p>
+Your journey towards placements starts here 🚀 <br>
+Analyze your technical, aptitude and communication skills to understand your placement readiness.
+</p>
+
+<button onclick="start()">Start Readiness Analyzer</button>
+
+</div>
+
+<script>
+function start(){
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

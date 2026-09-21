@@ -1,0 +1,55 @@
+/* ===== GLOBAL THEME ===== */
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    background: linear-gradient(135deg, #2c003e, #3a0ca3, #4361ee);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* ===== CARD STYLE ===== */
+.container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0px 0px 40px rgba(140, 100, 255, 0.4);
+}
+
+/* ===== HEADINGS ===== */
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+/* ===== BUTTON STYLE ===== */
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #00d4ff, #9d4edd);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #9d4edd, #00d4ff);
+}
+
+/* ===== INPUT BOX ===== */
+input, select {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}

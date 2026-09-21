@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Resume Analyzer</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+color:white;
+margin:0;
+text-align:center;
+}
+
+.container{
+width:90%;
+max-width:900px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:white;
+color:black;
+padding:20px;
+margin:20px 0;
+border-radius:10px;
+text-align:left;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:8px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+background:linear-gradient(45deg,#87CEEB,#FFB6C1);
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:25px;
+font-size:16px;
+cursor:pointer;
+}
+
+h1{
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Resume Analyzer</h1>
+
+<!-- Resume Creation Guide -->
+
+<div class="card">
+
+<h2>How to Create a Resume (Step by Step)</h2>
+
+<p><b>1. Personal Information</b><br>
+Add your Full Name, Phone Number and Email Address.</p>
+
+<p><b>2. Career Objective</b><br>
+Write a short statement about your career goals.</p>
+
+<p><b>3. Education</b><br>
+Mention your degree, college name, and CGPA or percentage.</p>
+
+<p><b>4. Technical Skills</b><br>
+Include programming languages and tools like Java, Python, HTML, SQL.</p>
+
+<p><b>5. Projects</b><br>
+Explain your academic or personal projects with technologies used.</p>
+
+<p><b>6. Internships</b><br>
+Mention internships and what skills you gained.</p>
+
+<p><b>7. Certifications</b><br>
+Add certifications from platforms like Coursera, NPTEL, Udemy.</p>
+
+<p><b>8. Achievements</b><br>
+Add awards, competitions or hackathons.</p>
+
+<p><b>9. Soft Skills</b><br>
+Mention teamwork, leadership, communication skills.</p>
+
+<p><b>10. Keep Resume Short</b><br>
+For freshers the resume should be 1 page.</p>
+
+</div>
+
+<!-- Demo Resume -->
+
+<div class="card">
+
+<h2>Demo Resume Example</h2>
+
+<p>
+<b>Name:</b> Akshaya Ailla<br><br>
+
+<b>Email:</b> akshaya@email.com<br><br>
+
+<b>Phone:</b> 9876543210<br><br>
+
+<b>Career Objective:</b><br>
+To obtain a challenging position in a reputed organization where I can use my skills and knowledge.<br><br>
+
+<b>Education:</b><br>
+B.Tech in Computer Science – XYZ College – 8.5 CGPA<br><br>
+
+<b>Technical Skills:</b><br>
+Java, Python, HTML, CSS, JavaScript, SQL<br><br>
+
+<b>Projects:</b><br>
+Placement Readiness Analyzer – Web Application using HTML, CSS and JavaScript<br><br>
+
+<b>Internship:</b><br>
+Web Development Intern – ABC Technologies<br><br>
+
+<b>Certifications:</b><br>
+Python Programming – Coursera<br>
+
+</p>
+
+</div>
+
+<!-- Resume Details Input -->
+
+<div class="card">
+
+<h2>Enter Resume Details</h2>
+
+<input type="text" id="name" placeholder="Enter Your Name">
+
+<input type="number" id="projects" placeholder="Number of Projects">
+
+<input type="number" id="internships" placeholder="Number of Internships">
+
+<input type="number" id="skills" placeholder="Number of Technical Skills">
+
+<input type="number" id="certifications" placeholder="Number of Certifications">
+
+<br>
+
+<button onclick="analyzeResume()">Analyze Resume</button>
+
+</div>
+
+<div class="card" id="result"></div>
+
+<div class="card">
+
+<h2>Skill Graph</h2>
+
+<canvas id="skillChart"></canvas>
+
+</div>
+
+<div class="card" id="companies"></div>
+
+<button onclick="downloadReport()">Download Report</button>
+
+</div>
+
+<script>
+
+function analyzeResume(){
+
+let name=document.getElementById("name").value;
+
+let projects=parseInt(document.getElementById("projects").value)||0;
+
+let internships=parseInt(document.getElementById("internships").value)||0;
+
+let skills=parseInt(document.getElementById("skills").value)||0;
+
+let certifications=parseInt(document.getElementById("certifications").value)||0;
+
+let score = projects*10 + internships*20 + skills*5 + certifications*10;
+
+if(score>100) score=100;
+
+let atsScore = score - 5 + Math.floor(Math.random()*10);
+
+if(atsScore>100) atsScore=100;
+
+let placement = score>=70 ? "YES" : (score>=40 ? "MAYBE" : "NO");
+
+document.getElementById("result").innerHTML=
+
+"<h3>Name: "+name+"</h3>"+
+
+"<h3>Resume Score: "+score+"/100</h3>"+
+
+"<h3>ATS Score: "+atsScore+"%</h3>"+
+
+"<p>Campus Placement Suitability: <b>"+placement+"</b></p>";
+
+/* Skill Chart */
+
+let ctx=document.getElementById("skillChart").getContext("2d");
+
+new Chart(ctx,{
+type:"radar",
+data:{
+labels:["Projects","Internships","Skills","Certifications"],
+datasets:[{
+label:"Resume Strength",
+data:[projects,internships,skills,certifications]
+}]
+},
+options:{
+scales:{
+r:{
+beginAtZero:true,
+max:10
+}
+}
+}
+});
+
+/* Company Matching */
+
+let companies=[];
+
+if(skills>=6 && projects>=3){
+companies=["Google","Microsoft","Amazon"];
+}
+else if(skills>=4){
+companies=["TCS","Infosys","Wipro","Accenture"];
+}
+else{
+companies=["Startups","Small IT Companies"];
+}
+
+document.getElementById("companies").innerHTML=
+
+"<h3>Best Matching Companies</h3>"+companies.join("<br>");
+
+localStorage.setItem("resumeReport",
+
+"Name: "+name+
+
+"\nResume Score: "+score+
+
+"\nATS Score: "+atsScore+
+
+"\nPlacement Suitability: "+placement+
+
+"\nMatching Companies: "+companies.join(", ")
+
+);
+
+}
+
+function downloadReport(){
+
+let text=localStorage.getItem("resumeReport");
+
+let blob=new Blob([text],{type:"text/plain"});
+
+let link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+
+link.download="Resume_Report.txt";
+
+link.click();
+
+}
+
+</script>
+
+</body>
+</html>

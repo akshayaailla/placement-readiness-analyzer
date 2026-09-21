@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Readiness Analyzer</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#25b6eb77,#1e40af);
+    font-family: Arial;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    width:420px;
+    border-radius:15px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:25px;
+    background: linear-gradient(to right,#22c55e,#16a34a);
+    color:white;
+    font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Placement Readiness Analyzer</h2>
+
+    <input id="name" placeholder="Your Name" style="width:100%;padding:10px"><br><br>
+
+    <label>Technical Skills (1–5)</label>
+    <input id="tech" type="number" min="1" max="5" value="3" style="width:100%;padding:10px"><br><br>
+
+    <label>Aptitude Skills</label>
+    <select id="apt" style="width:100%;padding:10px">
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+    </select><br><br>
+
+    <label>Communication Skills</label>
+    <select id="comm" style="width:100%;padding:10px">
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+    </select><br><br>
+
+    <button onclick="analyze()">Analyze Readiness</button>
+</div>
+
+<script>
+function analyze(){
+    const name = document.getElementById("name").value;
+    const tech = document.getElementById("tech").value;
+
+    localStorage.setItem("name", name);
+    localStorage.setItem("score", tech * 20);
+
+    window.location.href = "result.html";
+}
+</script>
+<script src="questions.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

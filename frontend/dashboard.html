@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+h1{
+font-size:40px;
+margin-bottom:50px;
+}
+
+/* One line boxes */
+
+.container{
+display:flex;
+gap:40px;
+}
+
+/* Dark Navy Blue Boxes */
+
+.card{
+background:#00008B;
+padding:30px;
+border-radius:12px;
+width:180px;
+box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+
+.card h2{
+margin-bottom:20px;
+color:white;
+}
+
+/* Shining Button */
+
+.shine-btn{
+
+background:linear-gradient(45deg,#87CEEB,#FFB6C1);
+border:none;
+color:white;
+padding:10px 22px;
+border-radius:25px;
+font-size:15px;
+cursor:pointer;
+animation:shine 2s infinite;
+
+}
+
+@keyframes shine{
+
+0%{box-shadow:0 0 6px #87CEEB;}
+
+50%{box-shadow:0 0 22px #FFB6C1;}
+
+100%{box-shadow:0 0 6px #87CEEB;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Dashboard</h1>
+
+<div class="container">
+
+<!-- Projects -->
+
+<div class="card">
+
+<h2>Projects</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='project.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Internships -->
+
+<div class="card">
+
+<h2>Internships</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='internship.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Mock Tests -->
+
+<div class="card">
+
+<h2>Mock Tests</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='mocktests.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Resume -->
+
+<div class="card">
+
+<h2>Resume</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='resume.html'">
+
+Start
+
+</button>
+
+</div>
+
+</div>
+
+</body>
+</html>

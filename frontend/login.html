@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login - Campus Drive</title>
+<style>
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 70%);
+}
+
+/* LOGIN BOX */
+.login-box {
+    background: rgba(255,255,255,0.05);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    width: 320px;
+}
+
+
+
+/* SHINING TITLE */
+.shine {
+    background: linear-gradient(90deg, #c084fc, #22d3ee, #c084fc);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shineMove 3s linear infinite;
+}
+
+@keyframes shineMove {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    margin-top: 15px;
+    color: white;
+    background: linear-gradient(to right, #c084fc, #22d3ee);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #22d3ee;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+<h2 class="shine">Campus Drive Login</h2>
+
+<input type="email" placeholder="Enter Email" id="email">
+<input type="text" placeholder="Enter Username" id="username">
+<input type="password" placeholder="Enter Password" id="password">
+
+<button onclick="goBranch()">Login</button>
+
+</div>
+
+<script>
+function goBranch(){
+
+    let email = document.getElementById("email").value;
+    let username = document.getElementById("username").value;
+
+    if(email === "" || username === ""){
+        alert("Please fill all details");
+        return;
+    }
+
+    localStorage.setItem("email", email);
+    localStorage.setItem("username", username);
+
+    // Go to Branch Selection Page
+    window.location.href = "branch.html";
+}
+</script>
+<script>
+
+function loginUser(){
+
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
+
+fetch("http://localhost:5000/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+email: email,
+password: password
+})
+
+})
+
+.then(response => response.text())
+
+.then(data => {
+
+alert(data);
+
+if(data === "Login Successful"){
+window.location.href = "branch.html";
+}
+
+});
+
+}
+
+</script>
+<script>
+
+async function login(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+const res = await fetch("http://localhost:5000/api/auth/login", {
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+email,
+password
+})
+
+});
+
+const data = await res.json();
+
+alert(data.message);
+
+}
+
+</script>
+</body>
+</html>

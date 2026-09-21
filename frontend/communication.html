@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Communication Round</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f2f4f8;
+margin:0;
+}
+
+.header{
+background:#2c3e50;
+color:white;
+padding:20px;
+text-align:center;
+font-size:22px;
+}
+
+.info{
+display:flex;
+justify-content:center;
+gap:50px;
+padding:10px;
+font-size:18px;
+}
+
+.container{
+width:80%;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0px 0px 10px gray;
+}
+
+.question{
+margin-bottom:25px;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2980b9;
+}
+
+.red{
+color:red;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+Communication Round
+</div>
+
+<div class="info">
+<div>⏳ Time Left: <span id="timer">05:00</span></div>
+<div>📊 Progress: <span id="progress">0/10</span></div>
+</div>
+
+<div class="container">
+
+<form id="quizForm"></form>
+
+<center>
+<br>
+<button onclick="submitQuiz()">Submit</button>
+</center>
+
+</div>
+
+<script>
+
+// TIMER
+let time = 300;
+
+let timer = setInterval(function(){
+
+let minutes = Math.floor(time/60);
+let seconds = time%60;
+
+document.getElementById("timer").innerText =
+minutes + ":" + (seconds<10?"0":"") + seconds;
+
+if(time==60){
+document.getElementById("timer").classList.add("red");
+}
+
+if(time==30){
+alert("⚠ Only 30 seconds left!");
+}
+
+time--;
+
+if(time<0){
+clearInterval(timer);
+submitQuiz();
+}
+
+},1000);
+
+
+// GET BRANCH
+let branch = localStorage.getItem("branch");
+
+
+// QUESTION BANK
+let bank = {
+
+CSE:[
+{q:"Choose correct sentence",opt:["She go to college","She goes to college","She going college","She gone college"],ans:1},
+{q:"Synonym of Happy",opt:["Sad","Joyful","Angry","Tired"],ans:1},
+{q:"Opposite of Success",opt:["Failure","Victory","Goal","Result"],ans:0},
+{q:"Correct spelling",opt:["Recieve","Receive","Receve","Recive"],ans:1},
+{q:"He ___ playing football",opt:["is","are","were","am"],ans:0},
+{q:"Plural of Child",opt:["Childs","Children","Childrens","Child"],ans:1},
+{q:"Synonym of Fast",opt:["Quick","Slow","Lazy","Weak"],ans:0},
+{q:"Opposite of Big",opt:["Small","Huge","Large","Tall"],ans:0},
+{q:"Choose polite word",opt:["Give me water","Please give me water","Water now","Bring water"],ans:1},
+{q:"Fill blank: I ___ a student",opt:["is","are","am","be"],ans:2},
+{q:"Correct tense: She ___ yesterday",opt:["comes","came","coming","come"],ans:1},
+{q:"Synonym of Smart",opt:["Intelligent","Dull","Lazy","Slow"],ans:0}
+],
+
+EEE:[
+{q:"Synonym of Begin",opt:["Start","Stop","Close","Finish"],ans:0},
+{q:"Opposite of Light",opt:["Heavy","Bright","Dark","Shine"],ans:2},
+{q:"Correct sentence",opt:["He go home","He goes home","He going home","He gone home"],ans:1},
+{q:"Plural of Mouse",opt:["Mouses","Mice","Mouse","Mices"],ans:1},
+{q:"Fill blank: They ___ playing",opt:["is","are","am","be"],ans:1},
+{q:"Synonym of Easy",opt:["Simple","Hard","Tough","Difficult"],ans:0},
+{q:"Opposite of Strong",opt:["Weak","Power","Force","Energy"],ans:0},
+{q:"Correct spelling",opt:["Beautifull","Beautiful","Beutiful","Beautifull"],ans:1},
+{q:"Fill blank: She ___ reading",opt:["is","are","am","be"],ans:0},
+{q:"Opposite of Early",opt:["Late","Soon","Quick","Fast"],ans:0},
+{q:"Synonym of Happy",opt:["Joyful","Sad","Cry","Anger"],ans:0},
+{q:"Correct word",opt:["Thier","Their","Ther","Thare"],ans:1}
+],
+
+ECE:[
+{q:"Synonym of Speak",opt:["Talk","Run","Walk","Jump"],ans:0},
+{q:"Opposite of Clean",opt:["Dirty","Clear","Pure","Fresh"],ans:0},
+{q:"Correct spelling",opt:["Adress","Address","Adres","Addres"],ans:1},
+{q:"Plural of Man",opt:["Mans","Men","Man","Mens"],ans:1},
+{q:"Fill blank: I ___ happy",opt:["is","are","am","be"],ans:2},
+{q:"Synonym of Big",opt:["Large","Small","Tiny","Little"],ans:0},
+{q:"Opposite of Up",opt:["Down","Top","High","Tall"],ans:0},
+{q:"Correct sentence",opt:["They plays","They play","They playing","They playeded"],ans:1},
+{q:"Synonym of Start",opt:["Begin","Stop","Close","End"],ans:0},
+{q:"Opposite of Hot",opt:["Cold","Warm","Heat","Fire"],ans:0},
+{q:"Correct word",opt:["Frend","Friend","Frind","Freind"],ans:1},
+{q:"Fill blank: She ___ a teacher",opt:["is","are","am","be"],ans:0}
+],
+
+MECH:[
+{q:"Synonym of Quick",opt:["Fast","Slow","Lazy","Late"],ans:0},
+{q:"Opposite of Good",opt:["Bad","Nice","Fine","Best"],ans:0},
+{q:"Correct spelling",opt:["Enviroment","Environment","Environmant","Enviromentt"],ans:1},
+{q:"Plural of Foot",opt:["Foots","Feet","Feets","Foot"],ans:1},
+{q:"Fill blank: He ___ working",opt:["is","are","am","be"],ans:0},
+{q:"Synonym of Small",opt:["Tiny","Huge","Large","Big"],ans:0},
+{q:"Opposite of Happy",opt:["Sad","Joy","Smile","Laugh"],ans:0},
+{q:"Correct sentence",opt:["She have book","She has book","She having book","She hading book"],ans:1},
+{q:"Synonym of Strong",opt:["Powerful","Weak","Soft","Low"],ans:0},
+{q:"Opposite of Full",opt:["Empty","Complete","Total","Fill"],ans:0},
+{q:"Correct word",opt:["Langauge","Language","Langage","Languae"],ans:1},
+{q:"Fill blank: They ___ students",opt:["is","are","am","be"],ans:1}
+],
+
+CIVIL:[
+{q:"Synonym of Build",opt:["Construct","Destroy","Break","Crash"],ans:0},
+{q:"Opposite of Hard",opt:["Soft","Tough","Strong","Solid"],ans:0},
+{q:"Correct spelling",opt:["Succes","Success","Sucses","Succes"],ans:1},
+{q:"Plural of Woman",opt:["Women","Womans","Woman","Womens"],ans:0},
+{q:"Fill blank: She ___ singing",opt:["is","are","am","be"],ans:0},
+{q:"Synonym of Start",opt:["Begin","End","Close","Stop"],ans:0},
+{q:"Opposite of High",opt:["Low","Tall","Top","Peak"],ans:0},
+{q:"Correct sentence",opt:["He eat food","He eats food","He eating food","He eaten food"],ans:1},
+{q:"Synonym of Safe",opt:["Secure","Risk","Danger","Threat"],ans:0},
+{q:"Opposite of Open",opt:["Close","Wide","Large","Clear"],ans:0},
+{q:"Correct word",opt:["Peopel","People","Peopl","Peoples"],ans:1},
+{q:"Fill blank: I ___ ready",opt:["is","are","am","be"],ans:2}
+],
+
+IT:[
+{q:"Synonym of Connect",opt:["Link","Break","Cut","Stop"],ans:0},
+{q:"Opposite of True",opt:["False","Right","Correct","Yes"],ans:0},
+{q:"Correct spelling",opt:["Definately","Definitely","Definatly","Definetly"],ans:1},
+{q:"Plural of Person",opt:["Persons","People","Person","Peoples"],ans:1},
+{q:"Fill blank: He ___ coding",opt:["is","are","am","be"],ans:0},
+{q:"Synonym of Create",opt:["Build","Destroy","Delete","Erase"],ans:0},
+{q:"Opposite of Online",opt:["Offline","Connected","Linked","Active"],ans:0},
+{q:"Correct sentence",opt:["They writes code","They write code","They writing code","They writed code"],ans:1},
+{q:"Synonym of Help",opt:["Assist","Ignore","Avoid","Leave"],ans:0},
+{q:"Opposite of Accept",opt:["Reject","Approve","Agree","Allow"],ans:0},
+{q:"Correct word",opt:["Comming","Coming","Comng","Comeing"],ans:1},
+{q:"Fill blank: We ___ learning",opt:["is","are","am","be"],ans:1}
+],
+
+AIML:[
+{q:"Synonym of Learn",opt:["Study","Forget","Ignore","Leave"],ans:0},
+{q:"Opposite of Smart",opt:["Dull","Bright","Sharp","Wise"],ans:0},
+{q:"Correct spelling",opt:["Inteligence","Intelligence","Intelligance","Intellgence"],ans:1},
+{q:"Plural of Analysis",opt:["Analysises","Analyses","Analysis","Analys"],ans:1},
+{q:"Fill blank: AI ___ powerful",opt:["is","are","am","be"],ans:0},
+{q:"Synonym of Predict",opt:["Forecast","Forget","Delete","Remove"],ans:0},
+{q:"Opposite of Increase",opt:["Decrease","Grow","Rise","Expand"],ans:0},
+{q:"Correct sentence",opt:["Model learn data","Model learns data","Model learning data","Model learned data"],ans:1},
+{q:"Synonym of Data",opt:["Information","Noise","Error","Bug"],ans:0},
+{q:"Opposite of Complex",opt:["Simple","Hard","Difficult","Tough"],ans:0},
+{q:"Correct word",opt:["Algoritham","Algorithm","Algorithem","Algoritem"],ans:1},
+{q:"Fill blank: ML ___ improving",opt:["is","are","am","be"],ans:0}
+]
+
+};
+
+
+// SHUFFLE
+function shuffle(arr){
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
+
+
+// RANDOM 10 QUESTIONS
+let questions = shuffle(bank[branch]).slice(0,10);
+
+let form = document.getElementById("quizForm");
+
+questions.forEach((q,i)=>{
+
+let shuffledOptions = shuffle([...q.opt]);
+let correctIndex = shuffledOptions.indexOf(q.opt[q.ans]);
+
+form.innerHTML += `
+<div class="question">
+<b>${i+1}. ${q.q}</b><br>
+<input type="radio" name="q${i}" value="0"> ${shuffledOptions[0]}<br>
+<input type="radio" name="q${i}" value="1"> ${shuffledOptions[1]}<br>
+<input type="radio" name="q${i}" value="2"> ${shuffledOptions[2]}<br>
+<input type="radio" name="q${i}" value="3"> ${shuffledOptions[3]}<br>
+</div>
+`;
+
+q.correct = correctIndex;
+
+});
+
+
+// PROGRESS
+document.addEventListener("change",()=>{
+let answered =
+document.querySelectorAll("input[type=radio]:checked").length;
+
+document.getElementById("progress").innerText =
+answered + "/10";
+});
+
+
+// SUBMIT
+function submitQuiz(){
+
+let score=0;
+
+questions.forEach((q,i)=>{
+let ans=document.querySelector('input[name="q'+i+'"]:checked');
+if(ans && parseInt(ans.value)===q.correct){
+score++;
+}
+});
+
+localStorage.setItem("communicationScore",score);
+
+window.location.href="result.html";
+
+}
+
+</script>
+<script>
+
+// ================= TIMER =================
+
+let time = 300; // 5 minutes
+
+let timer = setInterval(function(){
+
+let m = Math.floor(time/60);
+let s = time % 60;
+
+document.getElementById("timer").innerText =
+m + ":" + (s<10 ? "0" : "") + s;
+
+
+// 🔴 RED when 1 minute left
+if(time <= 60){
+document.getElementById("timer").style.color = "red";
+}
+
+
+// ⚠ WARNING at 30 seconds
+if(time == 30){
+alert("⚠ Only 30 seconds left!");
+}
+
+time--;
+
+
+// ⏳ AUTO SUBMIT
+if(time < 0){
+clearInterval(timer);
+submitQuiz();
+}
+
+},1000);
+
+
+// ================= DISABLE BACK =================
+
+history.pushState(null,null,location.href);
+window.onpopstate=function(){
+history.go(1);
+};
+
+
+// ================= DISABLE REFRESH =================
+
+document.addEventListener("keydown",function(e){
+
+// F5
+if(e.keyCode == 116){
+e.preventDefault();
+}
+
+// Ctrl + R
+if(e.ctrlKey && e.keyCode == 82){
+e.preventDefault();
+}
+
+});
+
+
+// ================= SUBMIT FUNCTION =================
+
+function submitQuiz(){
+
+let score = 0;
+
+questions.forEach((q,i)=>{
+
+let ans = document.querySelector('input[name="q'+i+'"]:checked');
+
+if(ans && parseInt(ans.value) === q.correct){
+score++;
+}
+
+});
+
+
+// STORE SCORE
+localStorage.setItem("communicationScore",score); // change for reasoning
+
+
+// 🚀 AUTO MOVE TO NEXT ROUND
+
+window.location.href = "result.html";
+
+}
+
+</script>
+
+</body>
+</html>

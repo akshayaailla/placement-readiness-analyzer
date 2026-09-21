@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reasoning Round</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f2f4f8;
+margin:0;
+}
+
+.header{
+background:#2c3e50;
+color:white;
+padding:20px;
+text-align:center;
+font-size:22px;
+}
+
+.info{
+display:flex;
+justify-content:center;
+gap:50px;
+padding:10px;
+font-size:18px;
+}
+
+.container{
+width:80%;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0px 0px 10px gray;
+}
+
+.question{
+margin-bottom:25px;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2980b9;
+}
+
+.red{
+color:red;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+Reasoning Round
+</div>
+
+<div class="info">
+<div>⏳ Time Left: <span id="timer">05:00</span></div>
+<div>📊 Progress: <span id="progress">0/10</span></div>
+</div>
+
+<div class="container">
+
+<form id="quizForm"></form>
+
+<center>
+<br>
+<button onclick="submitQuiz()">Submit</button>
+</center>
+
+</div>
+
+<script>
+
+// TIMER
+let time = 300;
+
+let timer = setInterval(function(){
+
+let minutes = Math.floor(time/60);
+let seconds = time%60;
+
+document.getElementById("timer").innerText =
+minutes + ":" + (seconds<10?"0":"") + seconds;
+
+if(time==60){
+document.getElementById("timer").classList.add("red");
+}
+
+if(time==30){
+alert("⚠ Only 30 seconds left!");
+}
+
+time--;
+
+if(time<0){
+clearInterval(timer);
+submitQuiz();
+}
+
+},1000);
+
+
+// GET BRANCH
+let branch = localStorage.getItem("branch");
+
+
+// QUESTION BANK
+let bank = {
+
+CSE:[
+{q:"Find next: 2,4,8,16,?",opt:["32","24","30","20"],ans:0},
+{q:"Odd one?",opt:["Apple","Banana","Car","Mango"],ans:2},
+{q:"Coding: CAT = 3120, BAT=?",opt:["2120","3120","2220","2110"],ans:0},
+{q:"Direction: Turn right from North?",opt:["East","West","South","North"],ans:0},
+{q:"Series: D,H,L,?",opt:["P","O","Q","R"],ans:0},
+{q:"5,10,20,?",opt:["40","25","30","35"],ans:0},
+{q:"Mirror of 3?",opt:["E","M","W","S"],ans:2},
+{q:"If A=1 B=2 then C=?",opt:["3","4","5","6"],ans:0},
+{q:"7,14,21,?",opt:["28","30","24","27"],ans:0},
+{q:"Knife : Cut :: Pen : ?",opt:["Write","Eat","Throw","Hold"],ans:0},
+{q:"CPU : Brain :: RAM : ?",opt:["Memory","Disk","Wire","Power"],ans:0},
+{q:"Monday +3 days ?",opt:["Thursday","Friday","Wednesday","Sunday"],ans:0}
+],
+
+EEE:[
+{q:"Next: 3,6,12,?",opt:["24","18","20","22"],ans:0},
+{q:"Odd one?",opt:["Volt","Ampere","Ohm","Meter"],ans:3},
+{q:"Coding: DOG = 4157, LOG=?",opt:["12157","1215","1217","1512"],ans:0},
+{q:"Signal : Noise :: Data : ?",opt:["Error","Cable","Wire","Power"],ans:0},
+{q:"Series: 1,3,6,10,?",opt:["15","14","16","18"],ans:0},
+{q:"Mirror of 6?",opt:["9","b","d","p"],ans:0},
+{q:"9,18,?",opt:["27","20","25","30"],ans:0},
+{q:"Eye : See :: Ear : ?",opt:["Hear","Speak","Touch","Taste"],ans:0},
+{q:"Fire : Hot :: Ice : ?",opt:["Cold","Wet","Dry","Warm"],ans:0},
+{q:"After Friday 2 days?",opt:["Sunday","Saturday","Monday","Tuesday"],ans:0},
+{q:"5,15,45,?",opt:["135","125","115","145"],ans:0},
+{q:"Engine : Power :: Brain : ?",opt:["Thinking","Sound","Heat","Light"],ans:0}
+],
+
+ECE:[
+{q:"Next: 4,8,16,?",opt:["32","24","20","28"],ans:0},
+{q:"Odd one?",opt:["Resistor","Capacitor","Inductor","Switch"],ans:3},
+{q:"Coding: BAT=2120, CAT=?",opt:["3120","2121","2122","2112"],ans:0},
+{q:"Series: B,E,H,?",opt:["K","J","I","L"],ans:0},
+{q:"Mirror of 2?",opt:["S","Z","E","N"],ans:0},
+{q:"6,12,?",opt:["18","20","15","21"],ans:0},
+{q:"North→West turn?",opt:["Left","Right","Back","Straight"],ans:0},
+{q:"Hammer : Hit :: Knife : ?",opt:["Cut","Push","Pull","Throw"],ans:0},
+{q:"Water : Wet :: Fire : ?",opt:["Hot","Dry","Cold","Cool"],ans:0},
+{q:"After Tuesday 4 days?",opt:["Saturday","Sunday","Monday","Friday"],ans:0},
+{q:"1,4,9,?",opt:["16","14","15","17"],ans:0},
+{q:"M=13 N=14 then O=?",opt:["15","16","17","18"],ans:0}
+],
+
+MECH:[
+{q:"Next: 10,20,30,?",opt:["40","50","45","35"],ans:0},
+{q:"Odd one?",opt:["Lathe","Drill","Milling","Keyboard"],ans:3},
+{q:"Coding: SUN=1921, RUN=?",opt:["1821","1721","1621","1521"],ans:0},
+{q:"Series: 3,9,27,?",opt:["81","72","90","60"],ans:0},
+{q:"Mirror of 5?",opt:["S","Z","E","N"],ans:0},
+{q:"4,16,?",opt:["64","32","48","56"],ans:0},
+{q:"Car : Fuel :: Human : ?",opt:["Food","Water","Air","Sleep"],ans:0},
+{q:"After Wednesday 3 days?",opt:["Saturday","Sunday","Monday","Friday"],ans:0},
+{q:"Find pair: Key : Lock :: Password : ?",opt:["Login","Door","Code","Access"],ans:3},
+{q:"Series: 2,5,10,17,?",opt:["26","25","27","24"],ans:0},
+{q:"Knife : Cut :: Saw : ?",opt:["Wood","Break","Split","Slice"],ans:3},
+{q:"Ice : Cold :: Steam : ?",opt:["Hot","Dry","Cool","Warm"],ans:0}
+],
+
+CIVIL:[
+{q:"Next: 7,14,21,?",opt:["28","30","24","27"],ans:0},
+{q:"Odd one?",opt:["Brick","Cement","Sand","Keyboard"],ans:3},
+{q:"Series: 2,6,12,?",opt:["20","18","24","30"],ans:0},
+{q:"Coding: CAT=3120 BAT=?",opt:["2120","3120","2220","2110"],ans:0},
+{q:"Mirror of 3?",opt:["E","M","W","S"],ans:2},
+{q:"North→East turn?",opt:["Right","Left","Back","Straight"],ans:0},
+{q:"Builder : House :: Teacher : ?",opt:["Teach","School","Student","Study"],ans:2},
+{q:"After Monday 5 days?",opt:["Saturday","Sunday","Friday","Thursday"],ans:0},
+{q:"Find next: 5,10,20,?",opt:["40","25","30","35"],ans:0},
+{q:"Water : River :: Car : ?",opt:["Road","Petrol","Engine","Wheel"],ans:0},
+{q:"Series: A,C,E,?",opt:["G","H","I","F"],ans:0},
+{q:"1,3,6,10,?",opt:["15","14","16","18"],ans:0}
+],
+
+IT:[
+{q:"Next: 1,2,4,8,?",opt:["16","14","12","10"],ans:0},
+{q:"Odd one?",opt:["Mouse","Keyboard","Monitor","Table"],ans:3},
+{q:"Coding: DOG=4157 LOG=?",opt:["12157","1215","1217","1512"],ans:0},
+{q:"Series: B,D,F,?",opt:["H","I","J","K"],ans:0},
+{q:"Mirror of 6?",opt:["9","b","d","p"],ans:0},
+{q:"9,18,?",opt:["27","20","25","30"],ans:0},
+{q:"Pen : Write :: Knife : ?",opt:["Cut","Push","Pull","Throw"],ans:0},
+{q:"After Thursday 3 days?",opt:["Sunday","Monday","Saturday","Friday"],ans:0},
+{q:"Find pair: Lock : Key :: Password : ?",opt:["Login","Door","Code","Access"],ans:0},
+{q:"Series: 3,9,27,?",opt:["81","72","90","60"],ans:0},
+{q:"Water : Wet :: Fire : ?",opt:["Hot","Dry","Cold","Cool"],ans:0},
+{q:"5,15,45,?",opt:["135","125","115","145"],ans:0}
+],
+
+AIML:[
+{q:"Next: 2,6,18,?",opt:["54","36","48","60"],ans:0},
+{q:"Odd one?",opt:["Python","Java","C++","Banana"],ans:3},
+{q:"Coding: AI=19 ML=?",opt:["1312","1213","1313","1412"],ans:0},
+{q:"Series: A,D,G,?",opt:["J","I","K","L"],ans:0},
+{q:"Mirror of 7?",opt:["L","F","T","Z"],ans:3},
+{q:"4,8,16,?",opt:["32","24","20","28"],ans:0},
+{q:"Brain : Think :: Computer : ?",opt:["Process","Eat","Run","Jump"],ans:0},
+{q:"After Sunday 2 days?",opt:["Tuesday","Monday","Wednesday","Thursday"],ans:0},
+{q:"Find pair: Teacher : Teach :: Model : ?",opt:["Train","Learn","Predict","Build"],ans:2},
+{q:"Series: 1,4,9,?",opt:["16","14","15","17"],ans:0},
+{q:"Ice : Cold :: Steam : ?",opt:["Hot","Dry","Cool","Warm"],ans:0},
+{q:"2,5,10,17,?",opt:["26","25","27","24"],ans:0}
+]
+
+};
+
+
+// SHUFFLE FUNCTION
+function shuffle(arr){
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
+
+
+// RANDOM 10 QUESTIONS
+let questions = shuffle(bank[branch]).slice(0,10);
+
+let form = document.getElementById("quizForm");
+
+
+// DISPLAY QUESTIONS
+questions.forEach((q,i)=>{
+
+let shuffledOptions = shuffle([...q.opt]);
+let correctIndex = shuffledOptions.indexOf(q.opt[q.ans]);
+
+form.innerHTML += `
+<div class="question">
+<b>${i+1}. ${q.q}</b><br>
+<input type="radio" name="q${i}" value="0"> ${shuffledOptions[0]}<br>
+<input type="radio" name="q${i}" value="1"> ${shuffledOptions[1]}<br>
+<input type="radio" name="q${i}" value="2"> ${shuffledOptions[2]}<br>
+<input type="radio" name="q${i}" value="3"> ${shuffledOptions[3]}<br>
+</div>
+`;
+
+q.correct = correctIndex;
+
+});
+
+
+// PROGRESS
+document.addEventListener("change",()=>{
+let answered =
+document.querySelectorAll("input[type=radio]:checked").length;
+
+document.getElementById("progress").innerText =
+answered + "/10";
+});
+
+
+// SUBMIT
+function submitQuiz(){
+
+let score=0;
+
+questions.forEach((q,i)=>{
+let ans=document.querySelector('input[name="q'+i+'"]:checked');
+if(ans && parseInt(ans.value)===q.correct){
+score++;
+}
+});
+
+localStorage.setItem("reasoningScore",score);
+
+// AUTO NEXT ROUND
+window.location.href="communication.html";
+
+}
+
+</script>
+
+</body>
+</html>

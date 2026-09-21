@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Internship Readiness Analyzer</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at center, #1e3a8a, #0f172a);
+    color: white;
+}
+
+/* MAIN TITLE */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* CARD */
+.card {
+    width: 80%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+}
+
+/* INPUTS */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+}
+
+/* BUTTON */
+button {
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#c084fc,#22d3ee);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* RESULT */
+#result {
+    margin-top: 15px;
+    white-space: pre-line;
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Internship Readiness Analyzer</h1>
+
+<!-- POPULAR INTERNSHIPS -->
+<div class="card">
+<h2>Popular Internship Opportunities</h2>
+<ul>
+<li>Web Development Internship</li>
+<li>Data Science Internship</li>
+<li>AI / Machine Learning Internship</li>
+<li>Android App Development Internship</li>
+<li>Cyber Security Internship</li>
+</ul>
+
+<h3>Companies Offering Internships</h3>
+<ul>
+<li>TCS</li>
+<li>Infosys</li>
+<li>Wipro</li>
+<li>Accenture</li>
+</ul>
+</div>
+
+<!-- USER INPUT -->
+<div class="card">
+
+<h2>Enter Your Details</h2>
+
+<select id="company" onchange="showSkills()">
+<option value="">Select Company</option>
+<option value="TCS">TCS</option>
+<option value="Infosys">Infosys</option>
+<option value="Wipro">Wipro</option>
+<option value="Accenture">Accenture</option>
+</select>
+
+<p id="requiredSkills"></p>
+
+<input type="number" id="skills" placeholder="Number of Technical Skills">
+<input type="number" id="projects" placeholder="Number of Projects">
+<input type="number" id="certifications" placeholder="Number of Certifications">
+
+<button onclick="checkInternship()">Check Eligibility</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+
+// Company Requirements
+const requirements = {
+    TCS: {
+        skills: "C, Java, SQL, Basic Aptitude",
+        min: { skills: 3, projects: 2, certifications: 1 }
+    },
+    Infosys: {
+        skills: "Java, Python, DBMS, Data Structures",
+        min: { skills: 4, projects: 2, certifications: 2 }
+    },
+    Wipro: {
+        skills: "Java, Web Development, Aptitude",
+        min: { skills: 3, projects: 1, certifications: 1 }
+    },
+    Accenture: {
+        skills: "Full Stack, Cloud, Aptitude, Communication",
+        min: { skills: 5, projects: 3, certifications: 2 }
+    }
+};
+
+// Show required skills when company selected
+function showSkills() {
+    const company = document.getElementById("company").value;
+
+    if (company) {
+        document.getElementById("requiredSkills").innerText =
+            "Required Skills: " + requirements[company].skills;
+    } else {
+        document.getElementById("requiredSkills").innerText = "";
+    }
+}
+
+// Check eligibility
+function checkInternship() {
+
+    const company = document.getElementById("company").value;
+    const skills = parseInt(document.getElementById("skills").value);
+    const projects = parseInt(document.getElementById("projects").value);
+    const certifications = parseInt(document.getElementById("certifications").value);
+
+    if (!company || !skills || !projects || !certifications) {
+        alert("Please fill all details!");
+        return;
+    }
+
+    const req = requirements[company].min;
+
+    let result = "";
+
+    if (
+        skills >= req.skills &&
+        projects >= req.projects &&
+        certifications >= req.certifications
+    ) {
+        result = "✅ You are eligible for " + company;
+    } else {
+        result = "❌ Not eligible for " + company + "\nImprove:\n";
+
+        if (skills < req.skills)
+            result += "- Increase Skills\n";
+
+        if (projects < req.projects)
+            result += "- Do more Projects\n";
+
+        if (certifications < req.certifications)
+            result += "- Add Certifications\n";
+    }
+
+    document.getElementById("result").innerText = result;
+}
+
+</script>
+
+</body>
+</html>

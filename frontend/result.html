@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Result</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#0b2a4a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.container{
+background:white;
+color:black;
+width:80%;
+margin:auto;
+padding:30px;
+border-radius:10px;
+}
+
+h2{
+color:#0b2a4a;
+}
+
+.score-box{
+display:flex;
+justify-content:space-around;
+margin-top:20px;
+}
+
+.card{
+background:#f2f2f2;
+padding:20px;
+width:22%;
+border-radius:10px;
+}
+
+.strength{
+color:green;
+font-weight:bold;
+}
+
+.weak{
+color:red;
+font-weight:bold;
+}
+
+.improve{
+color:orange;
+font-weight:bold;
+}
+
+button{
+margin-top:20px;
+padding:10px 20px;
+background:#0b2a4a;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Placement Test Report</h1>
+
+<div class="container">
+
+<h2>Your Scores</h2>
+
+<div class="score-box">
+
+<div class="card">
+<h3>Aptitude</h3>
+<p id="aptitudeScore"></p>
+</div>
+
+<div class="card">
+<h3>Technical</h3>
+<p id="technicalScore"></p>
+</div>
+
+<div class="card">
+<h3>Reasoning</h3>
+<p id="reasoningScore"></p>
+</div>
+
+<div class="card">
+<h3>Communication</h3>
+<p id="communicationScore"></p>
+</div>
+
+</div>
+
+<br>
+
+<h2>Performance Analysis</h2>
+
+<p class="strength" id="strength"></p>
+
+<p class="weak" id="weakness"></p>
+
+<p class="improve" id="improve"></p>
+
+<button onclick="downloadReport()">Download Report</button>
+
+</div>
+
+
+<script>
+
+// GET SCORES
+let aptitude = parseInt(localStorage.getItem("aptitudeScore")) || 0;
+let technical = parseInt(localStorage.getItem("technicalScore")) || 0;
+let reasoning = parseInt(localStorage.getItem("reasoningScore")) || 0;
+let communication = parseInt(localStorage.getItem("communicationScore")) || 0;
+
+// DISPLAY SCORES
+document.getElementById("aptitudeScore").innerText = aptitude + "/10";
+document.getElementById("technicalScore").innerText = technical + "/10";
+document.getElementById("reasoningScore").innerText = reasoning + "/10";
+document.getElementById("communicationScore").innerText = communication + "/10";
+
+// STORE
+let scores = {
+    "Aptitude": aptitude,
+    "Technical": technical,
+    "Reasoning": reasoning,
+    "Communication": communication
+};
+
+let values = Object.values(scores);
+
+// 🔴 CASE: ALL ZERO
+if (values.every(v => v === 0)) {
+
+    // ❌ No strength
+    document.getElementById("strength").innerText = "";
+
+    // ✅ Show ALL as weakness
+    document.getElementById("weakness").innerText =
+    "⚠ Your Weakness: Aptitude, Technical, Reasoning, Communication";
+
+    document.getElementById("improve").innerText =
+    "📈 You should start practicing all sections to improve placement chances.";
+
+}
+else {
+
+    let max = Math.max(...values);
+    let min = Math.min(...values);
+
+    let strengths = [];
+    let weaknesses = [];
+
+    for (let key in scores) {
+        if (scores[key] === max && max > 0) {
+            strengths.push(key);
+        }
+        if (scores[key] === min) {
+            weaknesses.push(key);
+        }
+    }
+
+    // SAME SCORES (but not zero)
+    if (max === min) {
+
+        document.getElementById("strength").innerText =
+        "📊 All skills are balanced.";
+
+        document.getElementById("weakness").innerText = "";
+
+        document.getElementById("improve").innerText =
+        "Try improving all sections to stand out.";
+    }
+    else {
+
+        document.getElementById("strength").innerText =
+        "✔ Your Strength(s): " + strengths.join(", ");
+
+        document.getElementById("weakness").innerText =
+        "⚠ Your Weakness(es): " + weaknesses.join(", ");
+
+        document.getElementById("improve").innerText =
+        "📈 Improve weak areas to increase placement chances.";
+    }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Aptitude Round</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f4f6f9;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+background:#0b3d91;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.info{
+margin-top:10px;
+display:flex;
+justify-content:center;
+gap:40px;
+font-weight:bold;
+}
+
+.main{
+flex:1;
+display:flex;
+justify-content:center;
+padding:30px 10px;
+}
+
+.container{
+width:95%;
+max-width:1000px;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+
+.question-block{
+margin-bottom:25px;
+padding-bottom:15px;
+border-bottom:1px solid #ddd;
+}
+
+.question-block p{
+margin-bottom:10px;
+font-weight:bold;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+cursor:pointer;
+}
+
+button{
+display:block;
+margin:30px auto 0;
+background:#0b3d91;
+color:white;
+padding:12px 30px;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#062a63;
+transform:scale(1.05);
+}
+
+.result{
+margin-top:20px;
+text-align:center;
+font-size:18px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>Aptitude Round</h2>
+<div class="info">
+<div>⏳ Time Left: <span id="time">05:00</span></div>
+<div>📊 Total Questions: 10</div>
+</div>
+</div>
+
+<div class="main">
+<div class="container">
+
+<form id="quizForm"></form>
+
+<button onclick="submitQuiz()">Submit</button>
+
+<div id="result" class="result"></div>
+
+</div>
+</div>
+
+<script>
+
+/******** GET BRANCH ********/
+let branch = localStorage.getItem("branch") || "CSE";
+
+/******** QUESTION BANK ********/
+let aptitudeBank = {
+
+CSE:[
+{q:"Binary of 15?", options:["1111","1010","1100","1001"], ans:0},
+{q:"2^5 = ?", options:["32","25","10","16"], ans:0},
+{q:"Data structure for FIFO?", options:["Queue","Stack","Tree","Graph"], ans:0},
+{q:"IP address version commonly used?", options:["IPv4","IPv2","IPv1","IPv3"], ans:0},
+{q:"Square of 14?", options:["196","144","188","200"], ans:0},
+{q:"25% of 500?", options:["125","100","150","120"], ans:0},
+{q:"LCM of 8 & 12?", options:["24","16","32","20"], ans:0},
+{q:"Speed formula?", options:["D/T","T/D","None","Power"], ans:0},
+{q:"Probability range?", options:["0-1","1-10","-1 to 1","0-100"], ans:0},
+{q:"Average of 10,20,30?", options:["20","15","25","30"], ans:0},
+{q:"Binary of 8?", options:["1000","1010","1100","1110"], ans:0}
+],
+
+ECE:[
+{q:"Unit of Frequency?", options:["Hertz","Volt","Ohm","Ampere"], ans:0},
+{q:"Binary of 12?", options:["1100","1010","1110","1001"], ans:0},
+{q:"Square of 13?", options:["169","144","150","180"], ans:0},
+{q:"If 4x=20,x=?", options:["5","4","10","2"], ans:0},
+{q:"LCM of 5 & 10?", options:["10","5","15","20"], ans:0},
+{q:"25% of 300?", options:["75","50","100","60"], ans:0},
+{q:"Resistance unit?", options:["Ohm","Volt","Watt","Amp"], ans:0},
+{q:"Cube of 5?", options:["125","25","100","150"], ans:0},
+{q:"Probability range?", options:["0-1","1-5","0-10","-1"], ans:0},
+{q:"Binary of 7?", options:["111","101","110","100"], ans:0},
+{q:"SI formula?", options:["PTR/100","PRT","None","P+R"], ans:0}
+],
+
+EEE:[
+{q:"Power formula?", options:["VI","IR","V/R","None"], ans:0},
+{q:"Binary of 9?", options:["1001","1010","1100","1110"], ans:0},
+{q:"Square of 11?", options:["121","111","110","101"], ans:0},
+{q:"LCM of 6 & 9?", options:["18","12","15","9"], ans:0},
+{q:"If 5x=25,x=?", options:["5","10","25","2"], ans:0},
+{q:"Area of rectangle?", options:["l*b","l+b","2l","None"], ans:0},
+{q:"Cube of 4?", options:["64","16","32","24"], ans:0},
+{q:"25% of 400?", options:["100","50","80","120"], ans:0},
+{q:"Probability range?", options:["0-1","None","1-5","-1"], ans:0},
+{q:"Binary of 6?", options:["110","101","111","100"], ans:0},
+{q:"SI formula?", options:["PTR/100","None","PRT","P+R"], ans:0}
+],
+
+MECH:[
+{q:"Unit of Force?", options:["Newton","Joule","Watt","Volt"], ans:0},
+{q:"Square of 15?", options:["225","200","250","240"], ans:0},
+{q:"If 3x=18,x=?", options:["6","5","3","9"], ans:0},
+{q:"LCM of 3 & 7?", options:["21","14","10","28"], ans:0},
+{q:"25% of 600?", options:["150","120","180","200"], ans:0},
+{q:"Cube of 6?", options:["216","36","180","250"], ans:0},
+{q:"Speed formula?", options:["D/T","T/D","None","Power"], ans:0},
+{q:"Binary of 5?", options:["101","100","110","111"], ans:0},
+{q:"Probability range?", options:["0-1","0-10","-1","1-5"], ans:0},
+{q:"Average of 5,10,15?", options:["10","15","8","12"], ans:0},
+{q:"Square of 9?", options:["81","72","90","100"], ans:0}
+],
+
+CIVIL:[
+{q:"Unit of Pressure?", options:["Pascal","Watt","Newton","Volt"], ans:0},
+{q:"Square of 16?", options:["256","225","200","300"], ans:0},
+{q:"If 8x=40,x=?", options:["5","4","6","8"], ans:0},
+{q:"LCM of 9 & 12?", options:["36","18","24","48"], ans:0},
+{q:"25% of 800?", options:["200","150","180","220"], ans:0},
+{q:"Cube of 2?", options:["8","4","6","10"], ans:0},
+{q:"Speed formula?", options:["D/T","T/D","None","Power"], ans:0},
+{q:"Binary of 4?", options:["100","101","110","111"], ans:0},
+{q:"Probability range?", options:["0-1","1-5","-1","0-10"], ans:0},
+{q:"Average of 6,12,18?", options:["12","10","14","15"], ans:0},
+{q:"Square of 5?", options:["25","20","30","15"], ans:0}
+]
+
+};
+
+aptitudeBank.IT = aptitudeBank.CSE;
+aptitudeBank.AIML = aptitudeBank.CSE;
+
+/******** RANDOMIZE ********/
+let questions = aptitudeBank[branch]
+.sort(()=>0.5-Math.random())
+.slice(0,10);
+
+/******** LOAD ********/
+let form = document.getElementById("quizForm");
+
+questions.forEach((q,index)=>{
+let block = document.createElement("div");
+block.classList.add("question-block");
+
+let html = `<p>${index+1}. ${q.q}</p>`;
+
+q.options.forEach((opt,i)=>{
+html += `
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label>`;
+});
+
+block.innerHTML = html;
+form.appendChild(block);
+});
+
+/******** SUBMIT ********/
+function submitQuiz(){
+
+let score = 0;
+
+questions.forEach((q,index)=>{
+let selected = document.querySelector(`input[name="q${index}"]:checked`);
+if(selected && parseInt(selected.value) === q.ans){
+score++;
+}
+});
+
+document.getElementById("result").innerHTML = 
+"Aptitude Score: " + score + " / 10";
+
+// Save score
+localStorage.setItem("aptitudeScore", score);
+
+// Move automatically
+goToNextRound();
+}
+function goToNextRound(){
+setTimeout(()=>{
+window.location.href = "technical.html"; // or hr.html if aptitude is second
+},2000);
+}
+
+/******** TIMER ********/
+let totalTime = 300; // 5 minutes
+
+let timer = setInterval(() => {
+
+totalTime--;
+
+let m = Math.floor(totalTime / 60);
+let s = totalTime % 60;
+
+let timeDisplay = document.getElementById("time");
+
+timeDisplay.innerText =
+(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+
+
+// 🔴 Turn RED when 1 minute left
+if(totalTime <= 60){
+timeDisplay.style.color = "red";
+timeDisplay.style.fontWeight = "bold";
+}
+
+
+// ⚠ Warning popup at 30 seconds
+if(totalTime === 30){
+alert("⚠ Only 30 seconds left!");
+}
+
+
+// ⏳ Time Up
+if(totalTime <= 0){
+clearInterval(timer);
+submitQuiz();
+alert("Time Up! Moving to next round...");
+goToNextRound();
+}
+
+},1000);
+// Disable back button
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+history.go(1);
+};
+
+// Warn before refresh
+window.onbeforeunload = function(){
+return "You cannot refresh during the test!";
+};
+
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Placement Readiness Quiz</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #4b0082;
+    }
+
+    h2 {
+      background: #ede7f6;
+      padding: 10px;
+      border-left: 6px solid #6a5acd;
+      color: #4b0082;
+      margin-top: 30px;
+    }
+
+    .question {
+      margin: 15px 0;
+      padding: 10px;
+    }
+
+    .question p {
+      font-weight: bold;
+    }
+
+    .options {
+      margin-left: 20px;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background: #6a5acd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4b0082;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Placement Readiness Assessment</h1>
+  <div id="quiz"></div>
+  <button onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<script>
+/* ===== GET BRANCH ===== */
+const branch = localStorage.getItem("branch") || "CSE";
+
+/* ===== QUESTION BANK ===== */
+
+const aptitude = [
+  {q:"If log₂(x)=6, find x.", o:["64","32"], a:0},
+  {q:"A sum becomes ₹800 in 2 years at 10% SI. Find principal.", o:["₹666","₹700"], a:0},
+  {q:"Series: 3, 9, 27, ?", o:["81","72"], a:0},
+  {q:"Ratio of ages A:B = 4:5. After 10 years → 5:6. A’s age?", o:["40","30"], a:0},
+  {q:"If 20% of A = 30% of B, A:B?", o:["3:2","2:3"], a:0},
+  {q:"Speed increases by 25%, time becomes?", o:["20% less","25% less"], a:0},
+  {q:"Probability of getting head in coin toss?", o:["1/2","1/3"], a:0},
+  {q:"LCM of 15 and 20?", o:["60","30"], a:0},
+  {q:"Average of 2,4,6,8?", o:["5","6"], a:0},
+  {q:"If x:y=7:9 and y:z=3:4, x:z?", o:["7:12","21:36"], a:0}
+];
+
+const communication = [
+  {q:"Best way to handle workplace conflict?", o:["Calm discussion","Ignore"], a:0},
+  {q:"STAR method used in interviews stands for?", o:["Situation Task Action Result","Speak Think Act React"], a:0},
+  {q:"Active listening requires?", o:["Attention","Speaking"], a:0},
+  {q:"Best interview body language?", o:["Open posture","Crossed arms"], a:0},
+  {q:"Clarifying questions show?", o:["Engagement","Confusion"], a:0},
+  {q:"Professional email should be?", o:["Clear & concise","Lengthy"], a:0},
+  {q:"Key interview skill?", o:["Communication","Speed"], a:0},
+  {q:"Avoid during interview?", o:["Interrupting","Listening"], a:0},
+  {q:"Example of non-verbal cue?", o:["Eye contact","Email"], a:0},
+  {q:"Confidence mainly comes from?", o:["Preparation","Guessing"], a:0}
+];
+
+const reasoning = [
+  {q:"Odd one out: Dog, Cat, Tiger, Chair", o:["Chair","Tiger"], a:0},
+  {q:"A is sister of B, B is father of C. A is?", o:["Aunt","Mother"], a:0},
+  {q:"AZ, CX, EV, ?", o:["GT","GX"], a:0},
+  {q:"If CLOCK = 58, WATCH = ?", o:["69","72"], a:0},
+  {q:"All pens are pencils. True conclusion?", o:["Some pencils are pens","All pencils are pens"], a:0},
+  {q:"Series: 1, 4, 9, 16, ?", o:["25","36"], a:0},
+  {q:"Mirror time of 3:50?", o:["8:10","9:10"], a:0},
+  {q:"Coding: BAD → EHG, CAT → ?", o:["FDW","DBU"], a:0},
+  {q:"Today Friday. After 13 days?", o:["Thursday","Wednesday"], a:0},
+  {q:"Opposite of Transparent?", o:["Opaque","Clear"], a:0}
+];
+
+const technical = {
+  CSE: [
+    {q:"Worst-case complexity of Merge Sort?", o:["O(n log n)","O(n²)"], a:0},
+    {q:"Which data structure follows LIFO?", o:["Stack","Queue"], a:0},
+    {q:"Which is not a DB normalization form?", o:["6NF","3NF"], a:0},
+    {q:"Deadlock requires how many conditions?", o:["4","2"], a:0},
+    {q:"HTTP protocol is?", o:["Stateless","Stateful"], a:0},
+    {q:"Primary key allows?", o:["Unique values","Duplicates"], a:0},
+    {q:"Which is stable sorting?", o:["Insertion sort","Selection sort"], a:0},
+    {q:"Virtual memory belongs to?", o:["OS","Compiler"], a:0},
+    {q:"DNS converts?", o:["Domain → IP","IP → Domain"], a:0},
+    {q:"ACID properties relate to?", o:["Transactions","Threads"], a:0}
+  ],
+
+  ECE: [
+    {q:"Nyquist rate equals?", o:["2B","B"], a:0},
+    {q:"Flip-flop stores?", o:["1 bit","1 byte"], a:0},
+    {q:"Bandwidth unit?", o:["Hz","Volt"], a:0},
+    {q:"Ideal op-amp input resistance?", o:["Infinite","Zero"], a:0},
+    {q:"Rectifier converts?", o:["AC to DC","DC to AC"], a:0},
+    {q:"PN junction acts as?", o:["Diode","Capacitor"], a:0},
+    {q:"Sampling theorem applies to?", o:["Analog signal","Digital signal"], a:0},
+    {q:"AM stands for?", o:["Amplitude Modulation","Angle Modulation"], a:0},
+    {q:"Q factor related to?", o:["Bandwidth","Voltage"], a:0},
+    {q:"IC means?", o:["Integrated Circuit","Internal Connection"], a:0}
+  ],
+
+  MECH: [
+    {q:"Second law of thermodynamics defines?", o:["Entropy","Energy"], a:0},
+    {q:"SI unit of stress?", o:["Pascal","Newton"], a:0},
+    {q:"Otto cycle used in?", o:["Petrol engine","Diesel engine"], a:0},
+    {q:"Hooke’s law valid till?", o:["Elastic limit","Breaking point"], a:0},
+    {q:"Non-ferrous metal?", o:["Aluminium","Steel"], a:0},
+    {q:"Heat transfer without medium?", o:["Radiation","Conduction"], a:0},
+    {q:"Latent heat occurs at?", o:["Constant temperature","Rising temperature"], a:0},
+    {q:"Ductile material?", o:["Copper","Glass"], a:0},
+    {q:"Stress formula?", o:["Force/Area","Area/Force"], a:0},
+    {q:"Carnot efficiency depends on?", o:["Temperature","Pressure"], a:0}
+  ]
+};
+
+/* ===== RENDER ===== */
+
+const quiz = document.getElementById("quiz");
+let index = 0;
+let all = [];
+
+function renderSection(title, questions, category) {
+  quiz.innerHTML += `<h2>${title}</h2>`;
+  questions.forEach(q => {
+    quiz.innerHTML += `
+      <div class="question">
+        <p>${q.q}</p>
+        <div class="options">
+          <input type="radio" name="q${index}" value="0"> ${q.o[0]}<br>
+          <input type="radio" name="q${index}" value="1"> ${q.o[1]}
+        </div>
+      </div>
+    `;
+    q.c = category;
+    q.i = index;
+    all.push(q);
+    index++;
+  });
+}
+
+renderSection("APTITUDE", aptitude, "aptitude");
+renderSection("TECHNICAL", technical[branch], "technical");
+renderSection("COMMUNICATION", communication, "communication");
+renderSection("REASONING", reasoning, "reasoning");
+
+/* ===== SUBMIT ===== */
+function submitQuiz() {
+  let score = {aptitude:0, technical:0, communication:0, reasoning:0};
+
+  all.forEach(q => {
+    const sel = document.querySelector(`input[name="q${q.i}"]:checked`);
+    if (sel && Number(sel.value) === q.a) score[q.c]++;
+  });
+
+  localStorage.setItem("aptitude", score.aptitude * 10);
+  localStorage.setItem("technical", score.technical * 10);
+  localStorage.setItem("communication", score.communication * 10);
+  localStorage.setItem("reasoning", score.reasoning * 10);
+
+  localStorage.setItem(
+    "finalScore",
+    Math.round((score.aptitude + score.technical + score.communication + score.reasoning) * 2.5)
+  );
+
+  window.location.href = "result.html";
+}
+</script>
+
+</body>
+</html>

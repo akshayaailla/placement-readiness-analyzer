@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Mock Tests</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+h1{
+margin-bottom:40px;
+}
+
+/* Boxes in one line */
+
+.container{
+display:flex;
+gap:30px;
+}
+
+/* Dark Navy Blue Boxes */
+
+.card{
+background:#000080;
+padding:25px;
+border-radius:10px;
+width:160px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.card h2{
+color:white;
+margin-bottom:15px;
+}
+
+/* Shining Button */
+
+.shine-btn{
+background:linear-gradient(45deg,#87CEEB,#FFB6C1);
+border:none;
+color:white;
+padding:10px 20px;
+border-radius:20px;
+cursor:pointer;
+animation:shine 2s infinite;
+}
+
+@keyframes shine{
+
+0%{box-shadow:0 0 5px #87CEEB;}
+
+50%{box-shadow:0 0 20px #FFB6C1;}
+
+100%{box-shadow:0 0 5px #87CEEB;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Mock Tests</h1>
+
+<div class="container">
+
+<!-- Aptitude -->
+
+<div class="card">
+
+<h2>Aptitude</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='aptitude.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Technical -->
+
+<div class="card">
+
+<h2>Technical</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='technical.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Reasoning -->
+
+<div class="card">
+
+<h2>Reasoning</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='reasoning.html'">
+
+Start
+
+</button>
+
+</div>
+
+<!-- Communication -->
+
+<div class="card">
+
+<h2>Communication</h2>
+
+<button class="shine-btn"
+onclick="window.location.href='communication.html'">
+
+Start
+
+</button>
+
+</div>
+
+</div>
+
+</body>
+</html>

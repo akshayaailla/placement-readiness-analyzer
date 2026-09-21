@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Technical Round</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#eef2f7;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+background:#0b3d91;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.info{
+margin-top:10px;
+display:flex;
+justify-content:center;
+gap:40px;
+font-weight:bold;
+}
+
+.main{
+flex:1;
+display:flex;
+justify-content:center;
+padding:30px 10px;
+}
+
+.container{
+width:95%;
+max-width:1000px;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+
+.question{
+margin-bottom:25px;
+padding-bottom:15px;
+border-bottom:1px solid #ddd;
+}
+
+.question p{
+margin-bottom:10px;
+font-weight:bold;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+cursor:pointer;
+}
+
+button{
+display:block;
+margin:30px auto 0;
+background:#0b3d91;
+color:white;
+padding:12px 30px;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#062a63;
+transform:scale(1.05);
+}
+
+.result{
+margin-top:20px;
+text-align:center;
+font-size:18px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>Technical Round</h2>
+<div class="info">
+<div>⏳ Time Left: <span id="time">05:00</span></div>
+<div>📊 Total Questions: 10</div>
+</div>
+</div>
+
+<div class="main">
+<div class="container">
+
+<form id="quizForm"></form>
+
+<button onclick="submitQuiz()">Submit</button>
+
+<div id="result" class="result"></div>
+
+</div>
+</div>
+
+<script>
+
+/******** GET BRANCH ********/
+let branch = localStorage.getItem("branch") || "CSE";
+
+/******** TECHNICAL QUESTION BANK ********/
+let techBank = {
+
+CSE:[
+{q:"What is OOP?", options:["Object Oriented Programming","Operating System","Output Process","None"], ans:0},
+{q:"Data structure used in DFS?", options:["Stack","Queue","Array","Tree"], ans:0},
+{q:"Which is not DBMS?", options:["HTML","MySQL","Oracle","MongoDB"], ans:0},
+{q:"Time complexity of Binary Search?", options:["O(log n)","O(n)","O(n2)","O(1)"], ans:0},
+{q:"Which language runs in browser?", options:["JavaScript","C","Python","Java"], ans:0},
+{q:"Primary key is?", options:["Unique identifier","Duplicate value","Index","None"], ans:0},
+{q:"HTTP stands for?", options:["Hyper Text Transfer Protocol","High Transfer","Hyperlink Transfer","None"], ans:0},
+{q:"Binary tree max children?", options:["2","3","4","1"], ans:0},
+{q:"Compiler converts?", options:["Source to Machine code","Binary to Decimal","Machine to Source","None"], ans:0},
+{q:"Which is frontend?", options:["React","Node","MySQL","Python"], ans:0},
+{q:"Which is backend language?", options:["NodeJS","HTML","CSS","Bootstrap"], ans:0}
+],
+
+IT:[
+{q:"Full form of URL?", options:["Uniform Resource Locator","Universal Link","Unique Resource","None"], ans:0},
+{q:"Which is cloud platform?", options:["AWS","MS Word","Excel","Paint"], ans:0},
+{q:"Firewall is used for?", options:["Security","Speed","Storage","None"], ans:0},
+{q:"Which is scripting language?", options:["JavaScript","C","C++","Java"], ans:0},
+{q:"OSI model layers?", options:["7","5","6","4"], ans:0},
+{q:"SQL used for?", options:["Database","Design","Coding","Testing"], ans:0},
+{q:"IP address size (IPv4)?", options:["32 bit","64 bit","16 bit","128 bit"], ans:0},
+{q:"Which is OS?", options:["Linux","HTML","CSS","Oracle"], ans:0},
+{q:"RAM is?", options:["Volatile","Non-volatile","Permanent","None"], ans:0},
+{q:"Protocol for email?", options:["SMTP","HTTP","FTP","TCP"], ans:0},
+{q:"Which is NoSQL DB?", options:["MongoDB","MySQL","Oracle","SQL Server"], ans:0}
+],
+
+AIML:[
+{q:"AI stands for?", options:["Artificial Intelligence","Auto Input","Advanced Info","None"], ans:0},
+{q:"ML type?", options:["Supervised","Cooking","Drawing","None"], ans:0},
+{q:"Algorithm for classification?", options:["Logistic Regression","Sorting","Searching","None"], ans:0},
+{q:"Python library for ML?", options:["Scikit-learn","Bootstrap","React","Laravel"], ans:0},
+{q:"Neural network basic unit?", options:["Neuron","Cell","NodeJS","API"], ans:0},
+{q:"Overfitting means?", options:["Too accurate on train","Low accuracy","No data","None"], ans:0},
+{q:"Dataset split?", options:["Train/Test","Read/Write","Push/Pull","None"], ans:0},
+{q:"TensorFlow used for?", options:["ML","HTML","CSS","None"], ans:0},
+{q:"KNN stands for?", options:["K Nearest Neighbors","Key Network","Known Node","None"], ans:0},
+{q:"Clustering example?", options:["K-means","Linear","Binary","None"], ans:0},
+{q:"AI application?", options:["Chatbot","Fan","Bulb","Switch"], ans:0}
+],
+
+EEE:[
+{q:"Transformer works on?", options:["AC","DC","Battery","Solar"], ans:0},
+{q:"Unit of Power?", options:["Watt","Volt","Amp","Ohm"], ans:0},
+{q:"Ohm's law formula?", options:["V=IR","P=VI","I=V","None"], ans:0},
+{q:"Generator converts?", options:["Mechanical to Electrical","Electrical to Heat","AC to DC","None"], ans:0},
+{q:"Unit of resistance?", options:["Ohm","Volt","Watt","Amp"], ans:0},
+{q:"AC frequency in India?", options:["50Hz","60Hz","40Hz","30Hz"], ans:0},
+{q:"Symbol of capacitor?", options:["||","--","//","++"], ans:0},
+{q:"Which is conductor?", options:["Copper","Wood","Plastic","Rubber"], ans:0},
+{q:"Circuit breaker used for?", options:["Protection","Cooling","Heating","None"], ans:0},
+{q:"Motor converts?", options:["Electrical to Mechanical","Heat to Light","Light to Heat","None"], ans:0},
+{q:"Unit of current?", options:["Ampere","Volt","Watt","Ohm"], ans:0}
+],
+
+CIVIL:[
+{q:"Cement ratio in PCC?", options:["1:4:8","1:1","2:1","None"], ans:0},
+{q:"Unit of pressure?", options:["Pascal","Volt","Watt","Amp"], ans:0},
+{q:"Survey tool?", options:["Theodolite","Motor","Switch","Fan"], ans:0},
+{q:"Concrete main ingredient?", options:["Cement","Oil","Gas","Plastic"], ans:0},
+{q:"Beam resists?", options:["Bending","Heating","Cooling","None"], ans:0},
+{q:"Unit of force?", options:["Newton","Watt","Volt","Amp"], ans:0},
+{q:"Foundation purpose?", options:["Support structure","Decoration","Cooling","None"], ans:0},
+{q:"Brick size standard?", options:["19x9x9 cm","10x10","5x5","20x20"], ans:0},
+{q:"Steel used for?", options:["Reinforcement","Painting","Decoration","None"], ans:0},
+{q:"Water cement ratio affects?", options:["Strength","Color","Shape","None"], ans:0},
+{q:"Slab carries?", options:["Load","Color","Heat","None"], ans:0}
+]
+
+};
+
+techBank.ECE = techBank.EEE;
+techBank.MECH = techBank.CIVIL;
+
+/******** RANDOMIZE ********/
+let questions = techBank[branch]
+.sort(()=>0.5-Math.random())
+.slice(0,10);
+
+/******** LOAD QUESTIONS ********/
+let form = document.getElementById("quizForm");
+
+questions.forEach((q,index)=>{
+let div=document.createElement("div");
+div.classList.add("question");
+
+let html=`<p>${index+1}. ${q.q}</p>`;
+q.options.forEach((opt,i)=>{
+html+=`
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label>`;
+});
+
+div.innerHTML=html;
+form.appendChild(div);
+});
+
+/******** SUBMIT ********/
+function submitQuiz(){
+let score=0;
+
+questions.forEach((q,index)=>{
+let selected=document.querySelector(`input[name="q${index}"]:checked`);
+if(selected && parseInt(selected.value)===q.ans){
+score++;
+}
+});
+
+document.getElementById("result").innerHTML="Technical Score: "+score+" / 10";
+
+// Save score if needed
+localStorage.setItem("technicalScore",score);
+
+// Auto move after 2 seconds
+goToNextRound();
+}
+function goToNextRound(){
+setTimeout(()=>{
+window.location.href="reasoning.html";; // Change to your next page name
+},2000);
+}
+
+/******** TIMER ********/
+let totalTime = 300; // 5 minutes
+
+let timer = setInterval(() => {
+
+totalTime--;
+
+let m = Math.floor(totalTime / 60);
+let s = totalTime % 60;
+
+let timeDisplay = document.getElementById("time");
+
+timeDisplay.innerText =
+(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+
+
+// 🔴 Turn RED when 1 minute left
+if(totalTime <= 60){
+timeDisplay.style.color = "red";
+timeDisplay.style.fontWeight = "bold";
+}
+
+
+// ⚠ Warning popup at 30 seconds
+if(totalTime === 30){
+alert("⚠ Only 30 seconds left!");
+}
+
+
+// ⏳ Time Up
+if(totalTime <= 0){
+clearInterval(timer);
+submitQuiz();
+alert("Time Up! Moving to next round...");
+goToNextRound();
+}
+
+},1000);
+// Disable back button
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+history.go(1);
+};
+
+// Warn before refresh
+window.onbeforeunload = function(){
+return "You cannot refresh during the test!";
+};
+
+</script>
+</body>
+</html>
