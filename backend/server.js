@@ -7,10 +7,9 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connect
-mongoose.connect("mongodb://127.0.0.1:27017/internshipDB")
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
-
+.catch(err => console.log("MongoDB connection error:", err));
 // Schema
 const studentSchema = new mongoose.Schema({
     company: String,
@@ -58,4 +57,8 @@ app.get("/data", async (req, res) => {
     res.json(data);
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
