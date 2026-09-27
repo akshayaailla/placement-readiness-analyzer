@@ -434,4 +434,4 @@ JNTUH, Hyderabad
 
 ## 🔗 Project Repository
 
-💻 **GitHub:** [Smart Campus Placement Readiness Analyzer](https://github.com/akshayaa111a/placement-readiness-analyzer)
+[Smart Campus Placement Readiness Analyzer](https://github.com/akshayaa111a/placement-readiness-analyzer)
